@@ -47,4 +47,5 @@ Table/Matrix (or Productivity, if that fits your workspace's taxonomy better)
 
 - Support: info@pbiwise.com
 - Documentation: https://github.com/andyocnz/HTML-Export-Viewer-PowerBI-Visual/blob/main/README.md
-- Privacy policy: https://github.com/andyocnz/HTML-Export-Viewer-PowerBI-Visual/blob/main/PRIVACY.md
+- Privacy policy: https://pbiwise.com/html-export-viewer.html#privacy
+- Product page: https://pbiwise.com/html-export-viewer.html
