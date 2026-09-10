@@ -1,0 +1,56 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "HTML content",
+            "name": "content",
+            "kind": "Measure"
+        }
+    ],
+    "objects": {
+        "toolbar": {
+            "properties": {
+                "show": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "pdfButtonText": {
+                    "type": {
+                        "text": true
+                    }
+                },
+                "excelButtonText": {
+                    "type": {
+                        "text": true
+                    }
+                },
+                "wordButtonText": {
+                    "type": {
+                        "text": true
+                    }
+                },
+                "fileName": {
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [
+                { "content": { "max": 1 } }
+            ],
+            "single": {
+                "role": "content"
+            }
+        }
+    ],
+    "privileges": [
+        {
+            "name": "ExportContent",
+            "essential": true
+        }
+    ]
+}

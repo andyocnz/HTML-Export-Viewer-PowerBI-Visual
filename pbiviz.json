@@ -1,0 +1,26 @@
+{
+    "visual": {
+        "name": "htmlExportViewer",
+        "displayName": "HTML Export Viewer",
+        "guid": "htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510",
+        "visualClassName": "Visual",
+        "version": "1.0.0.11",
+        "description": "Renders an HTML measure (for example, a styled table produced by DAX) and lets the report user export it to PDF, Excel or Word.",
+        "supportUrl": "mailto:info@pbiwise.com",
+        "gitHubUrl": ""
+    },
+    "apiVersion": "5.3.0",
+    "author": {
+        "name": "andy.ocnz",
+        "email": "andy.ocnz@gmail.com"
+    },
+    "assets": {
+        "icon": "assets/icon.png"
+    },
+    "externalJS": null,
+    "style": "style/visual.less",
+    "capabilities": "capabilities.json",
+    "dependencies": null,
+    "stringResources": [],
+    "version": "1.0.0.11"
+}
