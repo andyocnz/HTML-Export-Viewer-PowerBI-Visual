@@ -8,6 +8,11 @@ measure has to opt into that explicitly. This document is that contract.
 
 Support: info@pbiwise.com
 
+**Want to see it working first?** [`sample/HTML Export Viewer Demo.pbix`](sample/HTML%20Export%20Viewer%20Demo.pbix)
+is a small, self-contained sample report (fake subscription-plan data, no external data source)
+with the visual already wired up, including the live-formula feature described in section 2
+below. Open it in Power BI Desktop to see the whole contract in action before building your own.
+
 ---
 
 ## 1. Basic use (required)
