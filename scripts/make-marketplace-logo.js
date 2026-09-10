@@ -69,11 +69,16 @@ setUnitPx(13, 15, WHITE); setUnitPx(16, 15, WHITE);
 fillRect(13, 15, 16, 15, WHITE);
 setUnitPx(14, 16, WHITE); setUnitPx(15, 16, WHITE);
 
+// outDir/outPath are built solely from __dirname + fixed segments (no external/user input);
+// this is a build-time script, not part of the shipped visual bundle.
 const outDir = path.join(__dirname, "..", "assets", "marketplace");
+// eslint-disable-next-line powerbi-visuals/non-literal-fs-path
 if (!fs.existsSync(outDir)) {
+    // eslint-disable-next-line powerbi-visuals/non-literal-fs-path
     fs.mkdirSync(outDir, { recursive: true });
 }
 const outPath = path.join(outDir, `logo-${SIZE}.png`);
+// eslint-disable-next-line powerbi-visuals/non-literal-fs-path
 png.pack().pipe(fs.createWriteStream(outPath)).on("finish", () => {
     console.log("Wrote", outPath);
 });
