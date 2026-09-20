@@ -21,6 +21,9 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import IDownloadService = powerbi.extensibility.IDownloadService;
 import PrivilegeStatus = powerbi.PrivilegeStatus;
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import ISelectionIdBuilder = powerbi.visuals.ISelectionIdBuilder;
+import ITooltipService = powerbi.extensibility.ITooltipService;
 
 import { VisualFormattingSettingsModel } from "./settings";
 
@@ -55,6 +58,9 @@ export class Visual implements IVisual {
     private shadow: ShadowRoot;
     private placeholder: HTMLDivElement;
     private downloadService: IDownloadService;
+    private selectionManager: ISelectionManager;
+    private selectionIdBuilder: ISelectionIdBuilder;
+    private tooltipService: ITooltipService;
 
     private formattingSettings: VisualFormattingSettingsModel;
     private formattingSettingsService: FormattingSettingsService;
@@ -73,6 +79,22 @@ export class Visual implements IVisual {
         this.target = options.element;
         this.target.classList.add("wolc-export-visual");
         this.downloadService = options.host.downloadService;
+        this.selectionManager = options.host.createSelectionManager();
+        this.selectionIdBuilder = options.host.createSelectionIdBuilder();
+        this.tooltipService = options.host.tooltipService;
+
+        // Right-click context menu (Power BI certification requirement 1180.2.5). This visual
+        // has no discrete data points to attach a real identity to (content is a single HTML
+        // measure, not categorical data), so every right-click - on the toolbar, the rendered
+        // content, or empty space - opens the host's default "empty space" context menu via an
+        // identity-less selection ID, per Microsoft's guidance for non-categorical visuals.
+        this.target.addEventListener("contextmenu", (event: MouseEvent) => {
+            event.preventDefault();
+            this.selectionManager.showContextMenu(
+                this.selectionIdBuilder.createSelectionId(),
+                { x: event.clientX, y: event.clientY }
+            );
+        });
 
         this.toolbarEl = document.createElement("div");
         this.toolbarEl.className = "wolc-toolbar wolc-pos-bottom-right";
@@ -112,9 +134,55 @@ export class Visual implements IVisual {
         this.contentHost.className = "wolc-content-host";
         this.shadow = this.contentHost.attachShadow({ mode: "open" });
 
+        // Tooltips (Power BI certification requirement 1180.2.2.2). Delegated on the shadow
+        // root rather than attached per-cell, since content is replaced wholesale on every
+        // data update (see renderHtml) - this survives that without needing to re-wire
+        // listeners each time. Shows the cell's own text; for a data cell in a row with a
+        // label in its first column, the label is shown as the tooltip's header for context.
+        this.shadow.addEventListener("mouseover", (event: MouseEvent) => this.handleCellHover(event));
+        this.shadow.addEventListener("mousemove", (event: MouseEvent) => this.moveTooltip(event));
+        this.shadow.addEventListener("mouseout", (event: MouseEvent) => this.handleCellLeave(event));
+
         this.target.appendChild(this.toolbarEl);
         this.target.appendChild(this.placeholder);
         this.target.appendChild(this.contentHost);
+    }
+
+    private handleCellHover(event: MouseEvent): void {
+        const cell = (event.target as HTMLElement).closest("td, th") as HTMLTableCellElement;
+        if (!cell) {
+            return;
+        }
+        const value = (cell.textContent || "").trim();
+        if (!value) {
+            return;
+        }
+        const row = cell.closest("tr");
+        const rowLabel = row && row.cells.length > 0 ? (row.cells[0].textContent || "").trim() : "";
+        this.tooltipService.show({
+            coordinates: [event.clientX, event.clientY],
+            isTouchEvent: false,
+            dataItems: [{ displayName: rowLabel && rowLabel !== value ? rowLabel : "Value", value }],
+            identities: []
+        });
+    }
+
+    private moveTooltip(event: MouseEvent): void {
+        if (!(event.target as HTMLElement).closest("td, th")) {
+            return;
+        }
+        this.tooltipService.move({
+            coordinates: [event.clientX, event.clientY],
+            isTouchEvent: false,
+            identities: []
+        });
+    }
+
+    private handleCellLeave(event: MouseEvent): void {
+        if (!(event.target as HTMLElement).closest("td, th")) {
+            return;
+        }
+        this.tooltipService.hide({ isTouchEvent: false, immediately: true });
     }
 
     public update(options: VisualUpdateOptions) {
