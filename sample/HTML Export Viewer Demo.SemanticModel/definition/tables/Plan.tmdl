@@ -1,0 +1,111 @@
+table Plan
+	lineageTag: dca9d258-0652-4e81-8509-3b3a2c2ce99b
+
+	measure 'Sample HTML' =
+			VAR _PlanName = SELECTEDVALUE(Plan[PlanName])
+			VAR _BaseFee = SELECTEDVALUE(Plan[BaseFee])
+			VAR _Rate = SELECTEDVALUE(Plan[EscalationRate])
+			VAR _Years = SELECTEDVALUE(Plan[Years])
+			RETURN
+			IF(
+			    ISBLANK(_PlanName),
+			    "<html><head><meta charset=""UTF-8""></head><body><p>Select a plan to see its cost projection.</p></body></html>",
+			    VAR _AssumptionsJson =
+			        "[{""ref"":""baseFee"",""label"":""Base annual fee"",""value"":" & _BaseFee & ",""numFmt"":""$#,##0""},"
+			        & "{""ref"":""rate"",""label"":""Annual escalation rate"",""value"":" & _Rate & ",""numFmt"":""0.0%""}]"
+			    VAR _AssumptionsAttr = SUBSTITUTE(_AssumptionsJson, """", "&quot;")
+			    VAR _AssumptionsBlock =
+			        "<div hidden data-role=""export-assumptions"" data-assumptions=""" & _AssumptionsAttr & """></div>"
+			    VAR _CSS =
+			        "<style>"
+			        & "body{font-family:Arial,sans-serif;font-size:10pt;color:#000;padding:12px;}"
+			        & "table{border-collapse:collapse;width:100%;margin-top:8px;}"
+			        & "td,th{padding:6px 10px;border:1px solid #ccc;}"
+			        & ".banner{background-color:#2d6a4f;color:white;font-weight:bold;font-size:13pt;padding:10px;text-align:center;}"
+			        & "th{background-color:#2d6a4f;color:white;}"
+			        & ".num{text-align:right;}"
+			        & "</style>"
+			    VAR _Rows =
+			        CONCATENATEX(
+			            GENERATESERIES(1, _Years, 1),
+			            VAR _Y = [Value]
+			            VAR _YearIndex = _Y - 1
+			            VAR _Cost = _BaseFee * (1 + _YearIndex * _Rate)
+			            VAR _FormulaAttr =
+			                " data-formula=""{baseFee}*(1+{years}*{rate})"" data-formula-vars=""years:" & _YearIndex & """"
+			            RETURN
+			                "<tr><td>Year " & _Y & "</td>"
+			                & "<td class=""num""" & _FormulaAttr & ">" & FORMAT(_Cost,"$#,##0") & "</td></tr>",
+			            "",
+			            [Value], ASC
+			        )
+			    VAR _Table =
+			        "<table><tr><th>Year</th><th>Projected annual cost</th></tr>"
+			        & _Rows
+			        & "</table>"
+			    RETURN
+			        "<html><head><meta charset=""UTF-8""></head><body>"
+			        & _CSS
+			        & "<div class=""banner"">" & _PlanName & " plan - " & _Years & "-year cost projection</div>"
+			        & _Table
+			        & _AssumptionsBlock
+			        & "</body></html>"
+			)
+		lineageTag: 2507dff4-79e5-4b7a-a972-836dbf17e606
+
+	column PlanName
+		dataType: string
+		lineageTag: 5ae058fa-fdb8-4510-9f3b-bf00355d6bbc
+		summarizeBy: none
+		sourceColumn: PlanName
+
+		annotation SummarizationSetBy = Automatic
+
+	column BaseFee
+		dataType: int64
+		formatString: 0
+		lineageTag: 2485d200-4408-4009-ae09-27a55a5f8c20
+		summarizeBy: sum
+		sourceColumn: BaseFee
+
+		annotation SummarizationSetBy = Automatic
+
+	column EscalationRate
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 17b236e3-dc96-4c08-9852-97a52f29f4a8
+		summarizeBy: none
+		sourceColumn: EscalationRate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Years
+		dataType: int64
+		formatString: 0
+		lineageTag: 328f098d-5c9a-41f0-ad45-7430b8256972
+		summarizeBy: sum
+		sourceColumn: Years
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Plan = m
+		mode: import
+		source =
+				let
+				    Source = #table(
+				        type table [PlanName = text, BaseFee = Int64.Type, EscalationRate = number, Years = Int64.Type],
+				        {
+				            {"Starter", 1200, 0.05, 5},
+				            {"Pro", 4800, 0.04, 5},
+				            {"Enterprise", 18000, 0.03, 5}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

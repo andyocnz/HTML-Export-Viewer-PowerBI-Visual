@@ -1,0 +1,93 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "hintsTextbox",
+  "position": {
+    "x": 20,
+    "y": 140,
+    "width": 1240,
+    "height": 560,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "query": {
+      "queryState": {}
+    },
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  { "value": "How to use this sample", "textStyle": { "fontSize": "16pt", "fontWeight": "bold" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "This report demonstrates the HTML Export Viewer custom visual using fake subscription-plan data - no real data source is connected.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": " ", "textStyle": { "fontSize": "6pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "1. ", "textStyle": { "fontSize": "11pt", "fontWeight": "bold" } },
+                  { "value": "Go to the \"Subscription Cost Projection Demo\" page. Use the \"Choose a plan\" slicer to pick Starter, Pro, or Enterprise.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "2. ", "textStyle": { "fontSize": "11pt", "fontWeight": "bold" } },
+                  { "value": "The visual renders a styled HTML table showing a 5-year cost projection for the selected plan.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "3. ", "textStyle": { "fontSize": "11pt", "fontWeight": "bold" } },
+                  { "value": "Click Export PDF, Export Excel, or Export Word on the visual's toolbar to download the table in that format.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "4. ", "textStyle": { "fontSize": "11pt", "fontWeight": "bold" } },
+                  { "value": "To see the live-formula feature: open the exported Excel file and click into any \"Projected annual cost\" cell for Year 2-5. The formula bar shows a live formula referencing a small \"Assumptions\" block on the sheet, instead of a static number.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": " ", "textStyle": { "fontSize": "6pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "Tip: ", "textStyle": { "fontSize": "11pt", "fontWeight": "bold" } },
+                  { "value": "the exact DAX pattern used to produce this output (the data-formula and export-assumptions attributes) is documented in the visual's README on GitHub, section 2, for anyone who wants to use the live-formula feature in their own reports.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              },
+              {
+                "textRuns": [
+                  { "value": "Things to avoid: ", "textStyle": { "fontSize": "11pt", "fontWeight": "bold" } },
+                  { "value": "don't remove the hidden \"export-assumptions\" element from the measure's HTML output, and make sure every {token} referenced in a data-formula template is declared either in the assumptions block or in that cell's own data-formula-vars attribute - otherwise that cell's export falls back to a static value instead of a live formula.", "textStyle": { "fontSize": "11pt" } }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "color": { "solid": { "color": { "expr": { "Literal": { "Value": "'#F8F9FA'" } } } } } } }
+      ],
+      "border": [
+        { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

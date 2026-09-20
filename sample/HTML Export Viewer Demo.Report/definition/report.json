@@ -1,0 +1,44 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY23SU11",
+      "reportVersionAtImport": {
+        "visual": "1.8.85",
+        "report": "2.0.85",
+        "page": "1.3.85"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY23SU11",
+          "path": "BaseThemes/CY23SU11.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510.pbiviz.json",
+          "path": "htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}
