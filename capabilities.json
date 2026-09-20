@@ -52,5 +52,11 @@
             "name": "ExportContent",
             "essential": true
         }
-    ]
+    ],
+    "tooltips": {
+        "supportedTypes": {
+            "default": false,
+            "canvas": true
+        }
+    }
 }

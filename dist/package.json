@@ -1,5 +1,5 @@
 {
-		"version": "1.0.0.13",
+		"version": "1.0.0.14",
 		"author": {"name":"andy.ocnz","email":"andy.ocnz@gmail.com"},
 		"resources": [
 			{
@@ -8,7 +8,7 @@
 				"file": "resources/htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510.pbiviz.json"
 			}
 		],
-		"visual": {"name":"htmlExportViewer","displayName":"HTML Export Viewer","guid":"htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510","visualClassName":"Visual","version":"1.0.0.13","description":"Renders an HTML measure (for example, a styled table produced by DAX) and lets the report user export it to PDF, Excel or Word.","supportUrl":"mailto:info@pbiwise.com","gitHubUrl":""},
+		"visual": {"name":"htmlExportViewer","displayName":"HTML Export Viewer","guid":"htmlExportViewerEC647216FCDEE1F987A31BE6ADDB5510","visualClassName":"Visual","version":"1.0.0.14","description":"Renders an HTML measure (for example, a styled table produced by DAX) and lets the report user export it to PDF, Excel or Word.","supportUrl":"mailto:info@pbiwise.com","gitHubUrl":""},
 		"metadata": {
 			"pbivizjson": {
 				"resourceId": "rId0"
