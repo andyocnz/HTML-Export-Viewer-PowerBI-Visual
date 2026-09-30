@@ -24,6 +24,7 @@ import PrivilegeStatus = powerbi.PrivilegeStatus;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import ISelectionIdBuilder = powerbi.visuals.ISelectionIdBuilder;
 import ITooltipService = powerbi.extensibility.ITooltipService;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 
 import { VisualFormattingSettingsModel } from "./settings";
 
@@ -61,6 +62,7 @@ export class Visual implements IVisual {
     private selectionManager: ISelectionManager;
     private selectionIdBuilder: ISelectionIdBuilder;
     private tooltipService: ITooltipService;
+    private eventService: IVisualEventService;
 
     private formattingSettings: VisualFormattingSettingsModel;
     private formattingSettingsService: FormattingSettingsService;
@@ -82,6 +84,7 @@ export class Visual implements IVisual {
         this.selectionManager = options.host.createSelectionManager();
         this.selectionIdBuilder = options.host.createSelectionIdBuilder();
         this.tooltipService = options.host.tooltipService;
+        this.eventService = options.host.eventService;
 
         // Right-click context menu (Power BI certification requirement 1180.2.5). This visual
         // has no discrete data points to attach a real identity to (content is a single HTML
@@ -185,7 +188,20 @@ export class Visual implements IVisual {
         this.tooltipService.hide({ isTouchEvent: false, immediately: true });
     }
 
+    // Rendering Events API (Power BI certification requirement): every update reports
+    // started, then exactly one of finished/failed, so export-to-PowerPoint and email
+    // subscriptions know when the visual is ready to snapshot.
     public update(options: VisualUpdateOptions) {
+        this.eventService.renderingStarted(options);
+        try {
+            this.render(options);
+            this.eventService.renderingFinished(options);
+        } catch (err) {
+            this.eventService.renderingFailed(options, String(err));
+        }
+    }
+
+    private render(options: VisualUpdateOptions): void {
         const dataView: powerbi.DataView = options.dataViews && options.dataViews[0];
         this.formattingSettings = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, dataView);
 
@@ -239,9 +255,7 @@ export class Visual implements IVisual {
         const styleEls = Array.from(parsed.querySelectorAll("style"));
         const styleText = styleEls.map((el) => el.textContent || "").join("\n");
         styleEls.forEach((el) => el.remove());
-        const bodyHtml = parsed.body ? parsed.body.innerHTML : html;
-
-        const fragment = DOMPurify.sanitize(bodyHtml, {
+        const fragment = DOMPurify.sanitize(parsed.body, {
             WHOLE_DOCUMENT: false,
             RETURN_DOM_FRAGMENT: true
         });
