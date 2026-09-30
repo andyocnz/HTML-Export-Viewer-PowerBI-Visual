@@ -6,15 +6,16 @@
   "scripts": {
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
-    "package": "pbiviz package",
-    "lint": "npx eslint ."
+    "package": "pbiviz package --certification-fix",
+    "lint": "npx eslint .",
+    "eslint": "npx eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "dompurify": "^3.4.12",
     "exceljs": "^4.4.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
-    "powerbi-visuals-api": "~5.10.0",
+    "powerbi-visuals-api": "~5.11.0",
     "powerbi-visuals-utils-formattingmodel": "6.0.4"
   },
   "devDependencies": {
@@ -22,5 +23,8 @@
     "eslint": "^9.11.1",
     "eslint-plugin-powerbi-visuals": "^1.0.0",
     "typescript": "5.5.4"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   }
 }
